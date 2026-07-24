@@ -6,7 +6,7 @@
   "name": "ExtractFaces",
   "ioValues": [
     {
-      "name": "Input",
+      "name": "Assembly",
       "ioValue": "__GEOMETRY_INPUT__"
     }
   ],
@@ -29,238 +29,36 @@
       "x": 0.025384615384615384,
       "y": 0.15384615384615385,
       "uniqueID": "id-34813",
+      "name": "Assembly",
       "type": "faceselect",
       "selectedFaceData": {}
     },
     {
-      "atomType": "Rectangle",
-      "x": 0.2890625,
-      "y": 0.38285714285714284,
-      "uniqueID": "id-34840",
+      "atomType": "Code",
+      "x": 0.2565104166666667,
+      "y": 0.7599999999999999,
+      "uniqueID": "id-34871",
       "ioValues": [
         {
-          "name": "x length",
-          "ioValue": 10
-        },
-        {
-          "name": "y length",
-          "ioValue": 10
-        }
-      ]
-    },
-    {
-      "atomType": "Extrude",
-      "x": 0.3645833333333333,
-      "y": 0.3028571428571429,
-      "uniqueID": "id-34844",
-      "ioValues": [
-        {
-          "name": "geometry",
-          "ioValue": "__GEOMETRY_INPUT__"
-        },
-        {
-          "name": "height",
-          "ioValue": 10
-        }
-      ]
-    },
-    {
-      "atomType": "Move",
-      "x": 0.4290364583333333,
-      "y": 0.5685714285714285,
-      "uniqueID": "id-34848",
-      "ioValues": [
-        {
-          "name": "geometry",
-          "ioValue": "__GEOMETRY_INPUT__"
-        },
-        {
-          "name": "xDist",
-          "ioValue": 6
-        },
-        {
-          "name": "yDist",
-          "ioValue": 2
-        },
-        {
-          "name": "zDist",
-          "ioValue": 0
-        }
-      ]
-    },
-    {
-      "atomType": "Tag",
-      "x": 0.5065104166666666,
-      "y": 0.8142857142857143,
-      "uniqueID": "id-34854",
-      "name": "foo",
-      "ioValues": [
-        {
-          "name": "geometry",
+          "name": "input",
           "ioValue": "__GEOMETRY_INPUT__"
         }
       ],
-      "tags": [
-        "foo"
-      ]
-    },
-    {
-      "atomType": "Color",
-      "x": 0.47460937499999994,
-      "y": 0.3028571428571429,
-      "uniqueID": "id-34857",
-      "ioValues": [
-        {
-          "name": "geometry",
-          "ioValue": "__GEOMETRY_INPUT__"
-        }
-      ],
-      "selectedColor": "Purple"
-    },
-    {
-      "atomType": "Assembly",
-      "x": 0.5787760416666667,
-      "y": 0.7685714285714286,
-      "uniqueID": "id-34860",
-      "ioValues": [
-        {
-          "name": "Shape 1",
-          "ioValue": null
-        },
-        {
-          "name": "Shape 2",
-          "ioValue": null
-        }
-      ]
-    },
-    {
-      "atomType": "Molecule",
-      "x": 0.3665364583333333,
-      "y": 0.6514285714285714,
-      "uniqueID": "id-34826",
-      "name": "Molecule",
-      "topLevel": false,
-      "allAtoms": [
-        {
-          "atomType": "Output",
-          "x": 0.98,
-          "y": 0.5,
-          "uniqueID": "id-34828",
-          "ioValues": [
-            {
-              "name": "number or geometry",
-              "ioValue": "__GEOMETRY_INPUT__"
-            }
-          ]
-        }
-      ],
-      "allConnectors": [],
-      "fileTypeVersion": 1
-    },
-    {
-      "atomType": "Molecule",
-      "x": 0.6712239583333333,
-      "y": 0.38857142857142857,
-      "uniqueID": "id-34830",
-      "name": "New Molecule",
-      "ioValues": [
-        {
-          "name": "Input",
-          "ioValue": "__GEOMETRY_INPUT__"
-        }
-      ],
-      "topLevel": false,
-      "allAtoms": [
-        {
-          "atomType": "Output",
-          "x": 0.98,
-          "y": 0.5,
-          "uniqueID": "id-34832",
-          "ioValues": [
-            {
-              "name": "number or geometry",
-              "ioValue": "__GEOMETRY_INPUT__"
-            }
-          ]
-        },
-        {
-          "atomType": "Code",
-          "x": 0.48697916666666663,
-          "y": 0.4971428571428571,
-          "uniqueID": "id-34834",
-          "ioValues": [
-            {
-              "name": "input",
-              "ioValue": "__GEOMETRY_INPUT__"
-            }
-          ],
-          "interpreterVersion": 1,
-          "code": "function run(input: Assembly) {\n  const res =  input.onLeafs((leaf) => {\n    if (leaf.geometry instanceof replicad.Drawing) {\n      throw new Error(\"Drawings have no Faces. Input must be 3d\")\n    }\n    if (leaf.selection?.faces && leaf.selection.faces.length > 0) {\n      const faces = leaf.geometry.faces;\n      const faceIndexes = leaf.selection.faces\n      if (faceIndexes.length == 1) {\n        leaf.geometry = faces[faceIndexes[0]]\n        return leaf;\n      } else {\n        const res = faceIndexes.map((index) => {\n          return new Assembly({ geometry: faces[index] })\n        })\n        return new Assembly({\n          ...leaf,\n          geometry: res\n        })\n      }\n    }\n    return null;\n  })\n  console.log(res)\n  return res;\n}",
-          "compiledCode": "\"use strict\";\nfunction run(input) {\n    const res = input.onLeafs((leaf) => {\n        if (leaf.geometry instanceof replicad.Drawing) {\n            throw new Error(\"Drawings have no Faces. Input must be 3d\");\n        }\n        if (leaf.selection?.faces && leaf.selection.faces.length > 0) {\n            const faces = leaf.geometry.faces;\n            const faceIndexes = leaf.selection.faces;\n            if (faceIndexes.length == 1) {\n                leaf.geometry = faces[faceIndexes[0]];\n                return leaf;\n            }\n            else {\n                const res = faceIndexes.map((index) => {\n                    return new Assembly({ geometry: faces[index] });\n                });\n                return new Assembly({\n                    ...leaf,\n                    geometry: res\n                });\n            }\n        }\n        return null;\n    });\n    console.log(res);\n    return res;\n}\n"
-        },
-        {
-          "atomType": "Input",
-          "x": 0.025384615384615384,
-          "y": 0.15384615384615385,
-          "uniqueID": "id-34837",
-          "type": "faceselect",
-          "selectedFaceData": {
-            "0": [
-              2
-            ]
-          }
-        }
-      ],
-      "allConnectors": [
-        {
-          "ap2Name": "number or geometry",
-          "ap1ID": "id-34834",
-          "ap2ID": "id-34832"
-        },
-        {
-          "ap2Name": "input",
-          "ap1ID": "id-34837",
-          "ap2ID": "id-34834"
-        }
-      ],
-      "fileTypeVersion": 1
+      "interpreterVersion": 1,
+      "code": "function run(input: Assembly) {\n  const res =  input.onLeafs((leaf) => {\n    if (leaf.geometry instanceof replicad.Drawing) {\n      throw new Error(\"Drawings have no Faces. Input must be 3d\")\n    }\n    if (leaf.selection?.faces && leaf.selection.faces.length > 0) {\n      const faces = leaf.geometry.faces;\n      const faceIndexes = leaf.selection.faces\n      if (faceIndexes.length == 1) {\n        leaf.geometry = faces[faceIndexes[0]]\n        return leaf;\n      } else {\n        const res = faceIndexes.map((index) => {\n          return new Assembly({ ...leaf, geometry: faces[index] })\n        })\n        return new Assembly({\n          geometry: res\n        })\n      }\n    }\n    return null;\n  })\n  console.log(res)\n  return res;\n}",
+      "compiledCode": "\"use strict\";\nfunction run(input) {\n    const res = input.onLeafs((leaf) => {\n        if (leaf.geometry instanceof replicad.Drawing) {\n            throw new Error(\"Drawings have no Faces. Input must be 3d\");\n        }\n        if (leaf.selection?.faces && leaf.selection.faces.length > 0) {\n            const faces = leaf.geometry.faces;\n            const faceIndexes = leaf.selection.faces;\n            if (faceIndexes.length == 1) {\n                leaf.geometry = faces[faceIndexes[0]];\n                return leaf;\n            }\n            else {\n                const res = faceIndexes.map((index) => {\n                    return new Assembly({ ...leaf, geometry: faces[index] });\n                });\n                return new Assembly({\n                    geometry: res\n                });\n            }\n        }\n        return null;\n    });\n    console.log(res);\n    return res;\n}\n"
     }
   ],
   "allConnectors": [
     {
-      "ap2Name": "geometry",
-      "ap1ID": "id-34840",
-      "ap2ID": "id-34844"
+      "ap2Name": "input",
+      "ap1ID": "id-34813",
+      "ap2ID": "id-34871"
     },
     {
-      "ap2Name": "geometry",
-      "ap1ID": "id-34844",
-      "ap2ID": "id-34848"
-    },
-    {
-      "ap2Name": "geometry",
-      "ap1ID": "id-34844",
-      "ap2ID": "id-34857"
-    },
-    {
-      "ap2Name": "geometry",
-      "ap1ID": "id-34848",
-      "ap2ID": "id-34854"
-    },
-    {
-      "ap2Name": "Shape 2",
-      "ap1ID": "id-34854",
-      "ap2ID": "id-34860"
-    },
-    {
-      "ap2Name": "Shape 1",
-      "ap1ID": "id-34857",
-      "ap2ID": "id-34860"
-    },
-    {
-      "ap2Name": "Input",
-      "ap1ID": "id-34860",
-      "ap2ID": "id-34830"
+      "ap2Name": "number or geometry",
+      "ap1ID": "id-34871",
+      "ap2ID": "id-34811"
     }
   ],
   "unitsKey": "Unitless",
