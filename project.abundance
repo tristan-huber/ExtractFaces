@@ -27,10 +27,111 @@
     {
       "atomType": "Input",
       "x": 0.025384615384615384,
-      "y": 0.36,
+      "y": 0.15384615384615385,
       "uniqueID": "id-34813",
       "type": "faceselect",
       "selectedFaceData": {}
+    },
+    {
+      "atomType": "Rectangle",
+      "x": 0.2890625,
+      "y": 0.38285714285714284,
+      "uniqueID": "id-34840",
+      "ioValues": [
+        {
+          "name": "x length",
+          "ioValue": 10
+        },
+        {
+          "name": "y length",
+          "ioValue": 10
+        }
+      ]
+    },
+    {
+      "atomType": "Extrude",
+      "x": 0.3645833333333333,
+      "y": 0.3028571428571429,
+      "uniqueID": "id-34844",
+      "ioValues": [
+        {
+          "name": "geometry",
+          "ioValue": "__GEOMETRY_INPUT__"
+        },
+        {
+          "name": "height",
+          "ioValue": 10
+        }
+      ]
+    },
+    {
+      "atomType": "Move",
+      "x": 0.4290364583333333,
+      "y": 0.5685714285714285,
+      "uniqueID": "id-34848",
+      "ioValues": [
+        {
+          "name": "geometry",
+          "ioValue": "__GEOMETRY_INPUT__"
+        },
+        {
+          "name": "xDist",
+          "ioValue": 6
+        },
+        {
+          "name": "yDist",
+          "ioValue": 2
+        },
+        {
+          "name": "zDist",
+          "ioValue": 0
+        }
+      ]
+    },
+    {
+      "atomType": "Tag",
+      "x": 0.5065104166666666,
+      "y": 0.8142857142857143,
+      "uniqueID": "id-34854",
+      "name": "foo",
+      "ioValues": [
+        {
+          "name": "geometry",
+          "ioValue": "__GEOMETRY_INPUT__"
+        }
+      ],
+      "tags": [
+        "foo"
+      ]
+    },
+    {
+      "atomType": "Color",
+      "x": 0.47460937499999994,
+      "y": 0.3028571428571429,
+      "uniqueID": "id-34857",
+      "ioValues": [
+        {
+          "name": "geometry",
+          "ioValue": "__GEOMETRY_INPUT__"
+        }
+      ],
+      "selectedColor": "Purple"
+    },
+    {
+      "atomType": "Assembly",
+      "x": 0.5787760416666667,
+      "y": 0.7685714285714286,
+      "uniqueID": "id-34860",
+      "ioValues": [
+        {
+          "name": "Shape 1",
+          "ioValue": null
+        },
+        {
+          "name": "Shape 2",
+          "ioValue": null
+        }
+      ]
     },
     {
       "atomType": "Molecule",
@@ -94,13 +195,13 @@
             }
           ],
           "interpreterVersion": 1,
-          "code": "function run(input: Assembly) {\n  return input.onLeafs((leaf) => {\n    if (leaf.geometry instanceof replicad.Drawing) {\n      throw new Error(\"Drawings have no Faces. Input must be 3d\")\n    }\n    if (leaf.selection?.faces && leaf.selection.faces.length > 0) {\n      const faces = leaf.geometry.faces;\n      const faceIndexes = leaf.selection.faces\n      if (faceIndexes.length == 1) {\n        leaf.geometry = faces[faceIndexes[0]]\n        return leaf;\n      } else {\n        const res = faceIndexes.map((index) => {\n          return new Assembly({ geometry: faces[index] })\n        })\n        return new Assembly({\n          ...leaf,\n          geometry: res\n        })\n      }\n    }\n    return null;\n  })\n}",
-          "compiledCode": "\"use strict\";\nfunction run(input) {\n    return input.onLeafs((leaf) => {\n        if (leaf.geometry instanceof replicad.Drawing) {\n            throw new Error(\"Drawings have no Faces. Input must be 3d\");\n        }\n        if (leaf.selection?.faces && leaf.selection.faces.length > 0) {\n            const faces = leaf.geometry.faces;\n            const faceIndexes = leaf.selection.faces;\n            if (faceIndexes.length == 1) {\n                leaf.geometry = faces[faceIndexes[0]];\n                return leaf;\n            }\n            else {\n                const res = faceIndexes.map((index) => {\n                    return new Assembly({ geometry: faces[index] });\n                });\n                return new Assembly({\n                    ...leaf,\n                    geometry: res\n                });\n            }\n        }\n        return null;\n    });\n}\n"
+          "code": "function run(input: Assembly) {\n  const res =  input.onLeafs((leaf) => {\n    if (leaf.geometry instanceof replicad.Drawing) {\n      throw new Error(\"Drawings have no Faces. Input must be 3d\")\n    }\n    if (leaf.selection?.faces && leaf.selection.faces.length > 0) {\n      const faces = leaf.geometry.faces;\n      const faceIndexes = leaf.selection.faces\n      if (faceIndexes.length == 1) {\n        leaf.geometry = faces[faceIndexes[0]]\n        return leaf;\n      } else {\n        const res = faceIndexes.map((index) => {\n          return new Assembly({ geometry: faces[index] })\n        })\n        return new Assembly({\n          ...leaf,\n          geometry: res\n        })\n      }\n    }\n    return null;\n  })\n  console.log(res)\n}",
+          "compiledCode": "\"use strict\";\nfunction run(input) {\n    const res = input.onLeafs((leaf) => {\n        if (leaf.geometry instanceof replicad.Drawing) {\n            throw new Error(\"Drawings have no Faces. Input must be 3d\");\n        }\n        if (leaf.selection?.faces && leaf.selection.faces.length > 0) {\n            const faces = leaf.geometry.faces;\n            const faceIndexes = leaf.selection.faces;\n            if (faceIndexes.length == 1) {\n                leaf.geometry = faces[faceIndexes[0]];\n                return leaf;\n            }\n            else {\n                const res = faceIndexes.map((index) => {\n                    return new Assembly({ geometry: faces[index] });\n                });\n                return new Assembly({\n                    ...leaf,\n                    geometry: res\n                });\n            }\n        }\n        return null;\n    });\n    console.log(res);\n}\n"
         },
         {
           "atomType": "Input",
           "x": 0.025384615384615384,
-          "y": 0.34285714285714286,
+          "y": 0.15384615384615385,
           "uniqueID": "id-34837",
           "type": "faceselect",
           "selectedFaceData": {
@@ -123,109 +224,6 @@
         }
       ],
       "fileTypeVersion": 1
-    },
-    {
-      "atomType": "Rectangle",
-      "x": 0.2890625,
-      "y": 0.38285714285714284,
-      "uniqueID": "id-34840",
-      "ioValues": [
-        {
-          "name": "x length",
-          "ioValue": 10
-        },
-        {
-          "name": "y length",
-          "ioValue": 10
-        }
-      ]
-    },
-    {
-      "atomType": "Extrude",
-      "x": 0.3645833333333333,
-      "y": 0.3028571428571429,
-      "uniqueID": "id-34844",
-      "ioValues": [
-        {
-          "name": "geometry",
-          "ioValue": "__GEOMETRY_INPUT__"
-        },
-        {
-          "name": "height",
-          "ioValue": 10
-        }
-      ]
-    },
-    {
-      "atomType": "Move",
-      "x": 0.4290364583333333,
-      "y": 0.5685714285714285,
-      "uniqueID": "id-34848",
-      "ioValues": [
-        {
-          "name": "geometry",
-          "ioValue": "__GEOMETRY_INPUT__"
-        },
-        {
-          "name": "xDist",
-          "ioValue": 6,
-          "currentEquation": "6"
-        },
-        {
-          "name": "yDist",
-          "ioValue": 2,
-          "currentEquation": "2"
-        },
-        {
-          "name": "zDist",
-          "ioValue": 0
-        }
-      ]
-    },
-    {
-      "atomType": "Tag",
-      "x": 0.5065104166666666,
-      "y": 0.8142857142857143,
-      "uniqueID": "id-34854",
-      "name": "foo",
-      "ioValues": [
-        {
-          "name": "geometry",
-          "ioValue": "__GEOMETRY_INPUT__"
-        }
-      ],
-      "tags": [
-        "foo"
-      ]
-    },
-    {
-      "atomType": "Color",
-      "x": 0.47460937499999994,
-      "y": 0.3028571428571429,
-      "uniqueID": "id-34857",
-      "ioValues": [
-        {
-          "name": "geometry",
-          "ioValue": "__GEOMETRY_INPUT__"
-        }
-      ],
-      "selectedColor": "Purple"
-    },
-    {
-      "atomType": "Assembly",
-      "x": 0.5787760416666667,
-      "y": 0.7685714285714286,
-      "uniqueID": "id-34860",
-      "ioValues": [
-        {
-          "name": "Shape 1",
-          "ioValue": null
-        },
-        {
-          "name": "Shape 2",
-          "ioValue": null
-        }
-      ]
     }
   ],
   "allConnectors": [
